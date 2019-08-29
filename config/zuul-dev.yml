@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: zuul
+  rabbitmq:
+    host: 192.168.157.131
+    port: 5672
+    username: admin
+    password: admin
+
+#关闭09让出3001端口    
+server:
+  port: 3001
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka1:2001/eureka, http://eureka2:2002/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}  
+
+# routes路由 请求网关时转发给后台的服务 一个请求规则 按照格式来配资 当访问服务时使用哪个路径 以子路径来访问 都想该服务来转发
+#zuul:
+#  routes:
+#    item-service: /item-service/**
+#    user-service: /user-service/**
+#    order-service: /order-service/**
+
+zuul:
+  retryable: true
+  
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+#ribbon:
+#  ConnectTimeout: 1000
+#  ReadTimeout: 1000
+#  MaxAutoRetriesNextServer: 1    #下一台重试是1
+#  MaxAutoRetries: 1      #默认是0不会进行重试，单机重试是0
